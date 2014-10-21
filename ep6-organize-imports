@@ -1,0 +1,5 @@
+#!/bin/sh
+
+CORE_SCRIPTS_DIR="$EPAGES_CARTRIDGES/DE_EPAGES/Core/Scripts"
+
+$PERL $CORE_SCRIPTS_DIR/refactorCritic.pl -policy DE_EPAGES::Style::RequireCorrectImports -transform OrganizeImports -verbose $@

@@ -1,0 +1,72 @@
+#!/srv/epages/eproot/Perl/bin/perl
+
+use strict;
+use Getopt::Long;
+
+use DE_EPAGES::Core::API::File qw ( ExistsDirectory RunOnDirectory );
+use DE_EPAGES::Core::API::Script qw( RunScript );
+use DE_EPAGES::Core::API::SystemCommand qw ( SystemCommand );
+
+sub Main {
+    my ($Help, $TagName, $TargetDir, $CartridgesString);
+    GetOptions(
+        'help'            => \$Help,
+        'tag=s'           => \$TagName,
+        'dir=s'           => \$TargetDir,
+        'cartridges=s'    => \$CartridgesString,
+    );
+    usage() if $Help or not $TagName or not $TargetDir or not $CartridgesString;
+
+    my @CartridgeNames = split(/[;,]/, $CartridgesString);
+
+    die("directory $TargetDir does not exist!\n") unless ExistsDirectory($TargetDir);
+
+    my $DevBranch = $TagName;
+    my $SourceBranch = 'HEAD';
+    my $Start_DevBranch = "A_${DevBranch}";
+    my $Merge_DevBranch = "M_${DevBranch}";
+    my $DailyMergeTag = "M_${SourceBranch}_TO_${DevBranch}";
+
+    foreach my $CartridgeName (@CartridgeNames) {
+        die("directory $TargetDir does not exist!\n") unless ExistsDirectory($TargetDir.'/'.$CartridgeName);
+
+        print "\n---- tagging cartridge $CartridgeName with $TagName ----\n\n";
+
+        my $CartridgeDir = $TargetDir . '/' . $CartridgeName;
+
+        RunOnDirectory($CartridgeDir, sub {
+            print SystemCommand("cvs rtag -r ${SourceBranch} ${Start_DevBranch} RND/epages/epages5/AllOS/Cartridges/DE_EPAGES/${CartridgeName}", { 'Capture' => 1, 'Print' => 1 }) . "\n";
+            print SystemCommand("cvs -q rtag -b -r ${Start_DevBranch} ${DevBranch} RND/epages/epages5/AllOS/Cartridges/DE_EPAGES/${CartridgeName}", { 'Capture' => 1, 'Print' => 1 }) . "\n";
+            print SystemCommand("cvs -q rtag    -r ${Start_DevBranch} ${Merge_DevBranch} RND/epages/epages5/AllOS/Cartridges/DE_EPAGES/${CartridgeName}", { 'Capture' => 1, 'Print' => 1 }) . "\n";
+            print SystemCommand("cvs -q rtag    -r ${Start_DevBranch} ${DailyMergeTag} RND/epages/epages5/AllOS/Cartridges/DE_EPAGES/${CartridgeName}", { 'Capture' => 1, 'Print' => 1 }) . "\n";
+            print SystemCommand("cvs -q update -dP -r ${DevBranch}", { 'Capture' => 1, 'Print' => 1 }) . "\n";
+        });
+    }
+}
+
+sub usage {
+    print <<END_USAGE;
+Usage:
+    $0 [options] [flags]
+
+Description:
+    Create a development branch in CVS for multiple cartridges.
+
+Options:
+    -tag                name of the dev. branch tag                 (required)
+    -dir                vendor cartridges directory                 (required)
+    -cartridges         comma-separated list of cartridge names     (required)
+
+Flags:
+    -help               show the command line options               (optional)
+
+Examples:
+    $0 -tag EPG-12345 -dir \$EPAGES_CARTRIDGES\/DE_EPAGES -cartridges Content,Design,Forum
+
+END_USAGE
+exit 1;
+}
+
+RunScript(
+    'Sub' => \&Main
+);

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+$PERL $EPAGES_CARTRIDGES/DE_EPAGES/Trigger/Scripts/import.pl -storename Store $@

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd $EPAGES
+
+# TODO: install ctags if it isn't installed
+
+ctags --languages=Perl -f .tags -R Cartridges

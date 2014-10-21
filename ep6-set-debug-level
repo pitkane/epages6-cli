@@ -1,0 +1,3 @@
+#!/bin/sh
+
+$PERL $EPAGES_CARTRIDGES/DE_EPAGES/Object/Scripts/set.pl -storename Store -path "/" JSDebugLevel=$1

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+CORE_SCRIPTS_DIR="$EPAGES_CARTRIDGES/DE_EPAGES/Core/Scripts"
+
+$PERL $CORE_SCRIPTS_DIR/critic.pl -threads 2 -verbose -profile $CORE_SCRIPTS_DIR/perlcritic.conf $@
