@@ -7,13 +7,14 @@ Command line tools for epages6
 
 These tools only run on a working epages6 virtual machine.
 
-1. clone this repo in your `eproot` (`cd $EPAGES`)
-2. add following block at the end of your `~/.bashrc`: ```
+- clone this repo in your `eproot` (`cd $EPAGES`)
+- add following block at the end of your `~/.bashrc`: 
+```
 export EPAGES_CLI=$EPAGES/epages6-cli
 chmod a+x $EPAGES_CLI/ep6-*
 export PATH=$EPAGES_CLI:$PATH
 ```
-3. logout and relogin
+- logout and relogin
 
 ## Content
 
