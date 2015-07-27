@@ -2,6 +2,8 @@
 
 
 use strict;
+use feature 'say';
+
 use Getopt::Long;
 
 use DE_EPAGES::Core::API::File qw( ExistsFile GetFileContent GetFileContentLines );
@@ -14,11 +16,12 @@ my @Lines = ();
 my $FileName;
 GetOptions('file=s' => \$FileName);
 
-if (defined $FileName and ExistsFile($FileName)) {
-    $Content = GetFileContent($FileName);
+if (defined $FileName) {
+    die "File not found: $FileName" unless ExistsFile($FileName);
+    $Content = ${GetFileContent($FileName)};
     @Lines = GetFileContentLines($FileName);
 }
-else {    
+else {
     while (<>) {
         $Content .= $_;
         push @Lines, $_;
@@ -40,8 +43,10 @@ if ($Error) {
     my $Near = $ParsedLine[0];
     $Near =~ s/^\s*//;
 
-    print "$Message at line $LineNumber, near $Near";
+    print "$Message at line $LineNumber";
+    print ", near $Near" if ($Near =~ m/\S/);
+    print "\n";
 }
 else {
-    print "syntax ok\n";
+    say 'syntax ok';
 }
