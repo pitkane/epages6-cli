@@ -5,6 +5,16 @@ Command line tools for epages6
 
 ## Setup
 
+### Installer script
+
+Just paste into your vm terminal
+```
+curl https://raw.githubusercontent.com/ePages-rnd/epages6-cli/master/install.pl | $PERL
+```
+That simple.
+
+### Step-by-step
+
 These tools only run on a working epages6 virtual machine.
 
 - clone this repo in your `eproot` (`cd $EPAGES`)
