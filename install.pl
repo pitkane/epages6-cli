@@ -24,7 +24,7 @@ if (-d $ENV{'EPAGES'} . '/epages6-cli') {
 else {
     RunOnDirectory($ENV{'EPAGES'}, sub {
         say 'clone epages6-cli repo';
-        say 'git clone git@github.com:vilkasgroup/epages6-cli.git';
+        say `git clone https://github.com/vilkasgroup/epages6-cli.git`;
 
         my $BashRcCli = <<END;
 
