@@ -1,4 +1,4 @@
-epages6-cli
+epages6-cli (fork)
 ===========
 
 Command line tools for epages6
@@ -9,7 +9,7 @@ Command line tools for epages6
 
 Just paste into your vm terminal
 ```
-curl https://raw.githubusercontent.com/ePages-rnd/epages6-cli/master/install.pl | $PERL
+curl https://raw.githubusercontent.com/vilkasgroup/epages6-cli/master/install.pl | $PERL
 ```
 That simple.
 
@@ -18,7 +18,7 @@ That simple.
 These tools only run on a working epages6 virtual machine.
 
 - clone this repo in your `eproot` (`cd $EPAGES`)
-- add following block at the end of your `~/.bashrc`: 
+- add following block at the end of your `~/.bashrc`:
 ```
 export EPAGES_CLI=$EPAGES/epages6-cli
 chmod a+x $EPAGES_CLI/ep6-*
