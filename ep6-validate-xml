@@ -1,0 +1,62 @@
+#!/srv/epages/eproot/Perl/bin/perl
+
+
+use strict;
+use feature 'say';
+
+use Getopt::Long;
+
+use DE_EPAGES::Core::API::File qw( ExistsFile GetFileContent GetFileContentLines );
+use DE_EPAGES::TLE::API::TLE qw ( TestSyntax );
+
+#my $validator = new XML::Validate(Type => 'LibXML');
+
+my $Content = '';
+my @Lines = ();
+
+my $FileName;
+GetOptions('file=s' => \$FileName);
+if (defined $FileName) {
+    print "XML file to be parsed: ".$FileName."\n";
+    die "File not found: $FileName" unless ExistsFile($FileName);
+    $Content = ${GetFileContent($FileName)};
+    @Lines = GetFileContentLines($FileName);
+}
+else {
+    while (<>) {
+        $Content .= $_;
+        push @Lines, $_;
+    }
+}
+
+use XML::LibXML qw( );
+my $parser = XML::LibXML->new();
+
+if (eval { $parser->parse_file($FileName) }) {
+   print "XML syntax ok\n";
+} else {
+   print "error:\n$@";
+}
+
+# my $Error = TestSyntax(\$Content);
+# my $Error;
+# if ($Error) {
+#     my $Message = $Error->vars->{'Message'};
+#
+#     my @Yyparse = split(/\n/, $Error->vars->{'yyparse'});
+#     my $AfterNear = $Yyparse[0];
+#     my $QuotedAfterNear = quotemeta($AfterNear);
+#
+#     my $LineNumber = $Error->vars->{'Line'};
+#     my $Line = $Lines[$LineNumber - 1];
+#     my @ParsedLine = split(/$QuotedAfterNear/, $Line);
+#     my $Near = $ParsedLine[0];
+#     $Near =~ s/^\s*//;
+#
+#     print "$Message at line $LineNumber";
+#     print ", near $Near" if ($Near =~ m/\S/);
+#     print "\n";
+# }
+# else {
+#     say 'syntax ok';
+# }
